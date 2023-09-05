@@ -7,7 +7,8 @@
     "esbuild": "^0.19.2",
     "express": "^4.18.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0"
   },
   "scripts": {
     "build:client": "rm -rf dist/* && esbuild src/index.js --bundle --outfile=dist/bundle.js --loader:.js=jsx",
