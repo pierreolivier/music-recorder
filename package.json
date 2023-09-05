@@ -1,12 +1,16 @@
 {
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/material": "^5.14.8",
     "esbuild": "^0.19.2",
     "express": "^4.18.2",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "scripts": {
-    "build:client": "esbuild src/index.js --bundle --outfile=dist/bundle.js --loader:.js=jsx",
+    "build:client": "rm -rf dist/* && esbuild src/index.js --bundle --outfile=dist/bundle.js --loader:.js=jsx",
     "build:server": "esbuild server/server.jsx --bundle --outfile=build/server.js --platform=node",
     "build": "npm run build:client && npm run build:server",
     "start": "node ./build/server.js",

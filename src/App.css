@@ -1,0 +1,17 @@
+body {
+    margin: 20px auto;
+    font-family: 'roboto';
+    font-weight: 300;
+    text-align: center;
+    background-color: #262626;
+    color: #ffffff;
+}
+
+.actions {
+
+}
+
+.actions Button {
+    margin-left: 8px;
+    margin-right: 8px;
+}
