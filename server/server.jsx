@@ -7,10 +7,17 @@ import express from "express";
 
 import App from "../src/App";
 
+import Api from "./api";
+
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.static(path.join(__dirname,'..','dist')));
+
+app.get(['/api', '/api/*'], (req, res) => {
+    Api.parse(req, res);
+});
+
 app.get("/", (req, res) => {
     fs.readFile(path.resolve("./public/index.html"), "utf8", (err, data) => {
         if (err) {
