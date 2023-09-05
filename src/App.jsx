@@ -14,25 +14,18 @@ export default function App() {
 
     return (
         <div>
-            <h1>Xone 23C DJ Set Recorder</h1>
+            <h1 className={"title"}>Xone 23C DJ Set Recorder</h1>
+            <div className={"divider"}></div>
 
-            <Grid container spacing={2}>
-                <Grid xs={12}>
-                    <Item className={"status"}>No recording in progress</Item>
-                </Grid>
-                <Grid xs={12}>
-                    <Item className={"actions"}>
-                        <Button variant="contained">Start record</Button>
-                        <Button variant="outlined">Stop record</Button>
-                    </Item>
-                </Grid>
-                <Grid xs={12}>
-                    <Item className={"actions"}>
-                        <Button onClick={() => location.assign('http://' + location.hostname + '/recordings/')} variant="outlined">Recordings list</Button>
-                        <Button onClick={() => location.assign('/api/list')} variant="outlined">Process list</Button>
-                    </Item>
-                </Grid>
-            </Grid>
+            <div className={"status"}>No recording in progress</div>
+            <div className={"divider"}></div>
+
+            <div className={"actions"}>
+                <Button variant="contained">Start record</Button>
+                <Button variant="outlined">Stop record</Button>
+                <Button onClick={() => location.assign('http://' + location.hostname + '/recordings/')} variant="outlined">Recordings list</Button>
+                <Button onClick={() => location.assign('/api/list')} variant="outlined">Process list</Button>
+            </div>
         </div>
     );
 }

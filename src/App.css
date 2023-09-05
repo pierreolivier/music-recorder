@@ -7,18 +7,27 @@ body {
     color: #ffffff;
 }
 
-.status {
-    margin-top: 32px;
+.title {
     margin-left: 8px;
     margin-right: 8px;
+}
+
+.divider {
+    border-top: 1px solid;
+    width: 100%;
+}
+
+.status {
+    margin: 32px 8px;
     text-align: center;
 }
 
 .actions {
-
+    margin-top: 12px;
 }
 
 .actions Button {
     margin-left: 8px;
     margin-right: 8px;
+    margin-top: 12px;
 }
