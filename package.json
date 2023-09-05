@@ -1,8 +1,17 @@
 {
   "dependencies": {
-    "@react-ssr/express": "^0.24.0",
+    "esbuild": "^0.19.2",
     "express": "^4.18.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0"
+  },
+  "scripts": {
+    "build:client": "esbuild src/index.js --bundle --outfile=dist/bundle.js --loader:.js=jsx",
+    "build:server": "esbuild server/server.jsx --bundle --outfile=build/server.js --platform=node",
+    "build": "npm run build:client && npm run build:server",
+    "start": "node ./build/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
