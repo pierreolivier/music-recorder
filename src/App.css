@@ -22,11 +22,36 @@ body {
     text-align: center;
 }
 
-.actions {
-    margin-top: 12px;
-    margin-bottom: 12px;
+.action {
+    /* margin-top: 12px;
+    margin-bottom: 12px;*/
 }
 
-.actions Button {
-    margin: 12px 8px;
+.action Button {
+    margin-top: 12px;
+    margin-right: 8px;
+    margin-left: 8px;
 }
+
+.configure {
+    margin-top: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
+    text-align: left;
+}
+
+.simple-panel .MuiBox-root {
+    padding: 4px;
+}
+
+/* .MuiTab-root {
+    color: #ffffff;
+}
+
+.MuiTab-root.Mui-selected {
+    color: #ffffff;
+}
+
+.MuiTabs-indicator {
+    background-color: #ffffff;
+}*/
