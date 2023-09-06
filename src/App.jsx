@@ -16,7 +16,7 @@ import {
 
 import './App.css';
 
-import {PlayArrow, Download} from "@mui/icons-material";
+import {PlayArrow, Delete} from "@mui/icons-material";
 
 const darkTheme = createTheme({
     palette: {
@@ -84,6 +84,23 @@ export default function App() {
         setPowerOffDialog(false);
     };
 
+    const [deleteFilePath, setDeleteFilePath] = React.useState('');
+    const [deleteFileDialog, setDeleteFileDialog] = React.useState(false);
+
+    const handleDeleteFile = () => {
+        setDeleteFileDialog(true);
+    };
+
+    const handleDeleteFileYes = () => {
+        setDeleteFileDialog(false);
+
+        deleteFile(deleteFilePath);
+    };
+
+    const handleDeleteFileNo = () => {
+        setDeleteFileDialog(false);
+    };
+
     function updateRunning() {
         return fetch('/api/running')
             .then(res => res.json())
@@ -125,19 +142,25 @@ export default function App() {
             });
     }
 
-    function downloadFile(file) {
-        window.open('http://music.local/recordings/' + file);
+    function playFile(file) {
+        window.location.assign('http://music.local/recordings/' + file);
     }
 
-    function openVLC(file) {
-        window.open('vlc-x-callback://x-callback-url/stream?url=http://music.local/recordings/' + file);
+    function deleteFile(file) {
+        return fetch('/api/delete?file=' + file)
+            .then(res => res.text())
+            .then(text => {
+                console.log('delete', text);
+
+                updateRunning();
+            });
     }
 
     React.useEffect(() => {
         updateRunning();
 
         const timer = setInterval(() => {
-            updateRunning();
+            // TODO updateRunning();
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -178,6 +201,22 @@ export default function App() {
                     </DialogActions>
                 </Dialog>
 
+                <Dialog
+                    open={deleteFileDialog}
+                    onClose={handleDeleteFileNo}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description">
+                    <DialogTitle id="alert-dialog-title">
+                        Delete {decodeURI(deleteFilePath)} ?
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handleDeleteFileNo} autoFocus>No</Button>
+                        <Button onClick={handleDeleteFileYes}>
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={tabValue} onChange={handleChange}
                           aria-label="basic tabs example">
@@ -202,10 +241,13 @@ export default function App() {
                             return (
                                 <ListItem key={file} secondaryAction={
                                     <div>
-                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => downloadFile(file)}>
-                                            <Download />
+                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => {
+                                            setDeleteFilePath(file);
+                                            handleDeleteFile();
+                                        }}>
+                                            <Delete />
                                         </IconButton>
-                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => openVLC(file)}>
+                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => playFile(file)}>
                                             <PlayArrow />
                                         </IconButton>
                                     </div>

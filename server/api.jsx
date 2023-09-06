@@ -50,6 +50,16 @@ class Api {
                 break;
             }
 
+            case '/api/start': {
+                const start = await this.exec(Api.COMMAND.replaceAll('$HW', req.query?.device), res);
+
+                if (start !== undefined) {
+                    res.send('ok');
+                }
+
+                break;
+            }
+
             case '/api/stop': {
                 const stop = await this.exec('killall ffmpeg', res);
                 await this.exec('sync && echo ok');
@@ -61,10 +71,11 @@ class Api {
                 break;
             }
 
-            case '/api/start': {
-                const start = await this.exec(Api.COMMAND.replaceAll('$HW', req.query?.device), res);
+            case '/api/delete': {
+                const rm = await this.exec('rm "' + Api.RECORDINGS_PATH + '/' + req.query.file + '"', res);
+                await this.exec('sync && echo ok');
 
-                if (start !== undefined) {
+                if (rm !== undefined) {
                     res.send('ok');
                 }
 
