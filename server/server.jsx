@@ -4,6 +4,7 @@ import fs from "fs";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import express from "express";
+import favicon from "serve-favicon"
 
 import App from "../src/App";
 
@@ -16,11 +17,11 @@ const util= require('util');
 const exec = util.promisify(require('child_process').exec);
 
 app.use(express.static(path.join(__dirname,'..','dist')));
+app.use(favicon(__dirname + '/../public/favicon.ico'));
 
 app.get(['/api', '/api/*'], (req, res) => {
     Api.parse(req, res);
 });
-
 app.get("/", (req, res) => {
     fs.readFile(path.resolve("./public/index.html"), "utf8", (err, data) => {
         if (err) {

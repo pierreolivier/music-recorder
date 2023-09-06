@@ -9,7 +9,8 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "serve-favicon": "^2.5.0"
   },
   "scripts": {
     "build:client": "rm -rf dist/* && esbuild src/index.js --bundle --outfile=dist/bundle.js --loader:.js=jsx",

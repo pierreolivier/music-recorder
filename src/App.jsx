@@ -25,7 +25,7 @@ function CustomTabPanel(props) {
             {...other}>
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -64,6 +64,8 @@ export default function App() {
     }
 
     function start() {
+        setRunning(true);
+
         return fetch('/api/start?device=' + device)
             .then(res => res.text())
             .then(text => {
@@ -122,7 +124,7 @@ export default function App() {
                 </Box>
                 <CustomTabPanel value={value} index={0}>
                     <div className={"action"}>
-                        <Button variant="contained" onClick={() => start()}>Start record</Button>
+                        <Button variant="contained" disabled={running} onClick={() => start()}>Start record</Button>
                         <Button variant="outlined" onClick={() => stop()}>Stop record</Button>
                     </div>
                     <div className={"action"}>
