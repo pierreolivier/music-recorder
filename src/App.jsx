@@ -10,21 +10,73 @@ import './App.css';
 // <!--- Recording in progress... --->
 
 export default function App() {
-    const [times, setTimes] = React.useState(0);
+    const [running, setRunning] = React.useState(undefined);
+
+    function updateRunning() {
+        return fetch('/api/running')
+            .then(res => res.text())
+            .then(text => {
+                setRunning(text.includes('true'));
+            });
+    }
+
+    function start() {
+        return fetch('/api/start')
+            .then(res => res.text())
+            .then(text => {
+                console.log('start', text);
+
+                updateRunning();
+            });
+    }
+
+    function stop() {
+        return fetch('/api/stop')
+            .then(res => res.text())
+            .then(text => {
+                console.log('stop', text);
+
+                updateRunning();
+            });
+    }
+
+    React.useEffect(() => {
+        updateRunning();
+
+        const timer = setInterval(() => {
+            updateRunning();
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
 
     return (
         <div>
             <h1 className={"title"}>Xone 23C DJ Set Recorder</h1>
             <div className={"divider"}></div>
 
-            <div className={"status"}>No recording in progress</div>
+            <div className={"status"}>
+                {running === undefined && (
+                    <span>Loading recording state...</span>
+                )}
+                {running === true && (
+                    <span>Recording in progress...</span>
+                )}
+                {running === false && (
+                    <span>No recording in progress</span>
+                )}
+            </div>
             <div className={"divider"}></div>
 
             <div className={"actions"}>
-                <Button variant="contained">Start record</Button>
-                <Button variant="outlined">Stop record</Button>
+                <Button variant="contained" onClick={() => start()}>Start record</Button>
+                <Button variant="outlined" onClick={() => stop()}>Stop record</Button>
+            </div>
+
+            <div className={"divider"}></div>
+            <div className={"actions"}>
                 <Button onClick={() => location.assign('http://' + location.hostname + '/recordings/')} variant="outlined">Recordings list</Button>
-                <Button onClick={() => location.assign('/api/list')} variant="outlined">Process list</Button>
+                <Button onClick={() => location.assign('/api/list/process')} variant="outlined">Process list</Button>
+                <Button onClick={() => location.assign('/api/list/card')} variant="outlined">Card list</Button>
             </div>
         </div>
     );

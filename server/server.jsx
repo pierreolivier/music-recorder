@@ -12,6 +12,9 @@ import Api from "./api";
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+const util= require('util');
+const exec = util.promisify(require('child_process').exec);
+
 app.use(express.static(path.join(__dirname,'..','dist')));
 
 app.get(['/api', '/api/*'], (req, res) => {
@@ -36,4 +39,16 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
+    console.log(`Open http://localhost:${PORT}`);
+
+    Api.init();
+
+    setInterval(async () => {
+        try {
+            await exec('sync');
+            console.log('Syncing storage...');
+        } catch (err) {
+            console.error(err);
+        }
+    }, 5000);
 });
