@@ -240,27 +240,29 @@ export default function App() {
                     </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={tabValue} index={1}>
-                    <List>
-                        {recordings.map(file => {
-                            return (
-                                <ListItem key={file} secondaryAction={
-                                    <div>
-                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => {
-                                            setDeleteFilePath(file);
-                                            handleDeleteFile();
-                                        }}>
-                                            <Delete />
-                                        </IconButton>
-                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => playFile(file)}>
-                                            <PlayArrow />
-                                        </IconButton>
-                                    </div>
-                                }>
-                                    <ListItemText primary={decodeURI(file)} />
-                                </ListItem>
-                            )
-                        })}
-                    </List>
+                    {(recordings.length > 0 && recordings[0].trim() !== '') && (
+                        <List>
+                            {recordings.map(file => {
+                                return (
+                                    <ListItem key={file} secondaryAction={
+                                        <div>
+                                            <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => {
+                                                setDeleteFilePath(file);
+                                                handleDeleteFile();
+                                            }}>
+                                                <Delete />
+                                            </IconButton>
+                                            <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => playFile(file)}>
+                                                <PlayArrow />
+                                            </IconButton>
+                                        </div>
+                                    }>
+                                        <ListItemText primary={decodeURI(file)} />
+                                    </ListItem>
+                                )
+                            })}
+                        </List>
+                    )}
                 </CustomTabPanel>
                 <CustomTabPanel value={tabValue} index={2}>
                     <div className={"action"}>
