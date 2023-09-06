@@ -159,8 +159,12 @@ export default function App() {
     React.useEffect(() => {
         updateRunning();
 
+        if (localStorage.device !== undefined) {
+            setDevice(localStorage.device);
+        }
+
         const timer = setInterval(() => {
-            // TODO updateRunning();
+            updateRunning();
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -269,6 +273,8 @@ export default function App() {
                     <div className={"configure"}>
                         <TextField id="outlined-basic" fullWidth label="ALSA device" value={device} onChange={event => {
                             setDevice(event.target.value);
+
+                            localStorage.device = event.target.value;
                         }} variant="outlined" />
                     </div>
                 </CustomTabPanel>
