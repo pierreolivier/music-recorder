@@ -2,9 +2,10 @@ const util= require('util');
 const exec = util.promisify(require('child_process').exec);
 
 class Api {
-    static COMMAND = 'screen -d -m ffmpeg -f alsa -c:a pcm_s24le -channels 2 -sample_rate 48000 -i hw:3,0 -acodec libmp3lame -ab 320k "$(date).mp3"';
+    static COMMAND = 'screen -d -m ffmpeg -f alsa -c:a pcm_s24le -channels 2 -sample_rate 48000 -i $HW -acodec libmp3lame -ab 320k "/var/recordings/$(date).mp3"';
 
     super() {
+
     }
 
     async init() {
@@ -16,12 +17,15 @@ class Api {
 
     async running(res) {
         const list = await this.exec('ps aux | grep ffmpeg', res);
-        return list.toLowerCase().includes(Api.COMMAND);
+        return list.toLowerCase().includes(Api.COMMAND.substring(0, 40));
     }
 
     async parse(req, res) {
-
-        switch (req.url) {
+        console.log('\n\n\n==> new request');
+        console.log(new Date());
+        console.log('url', (req.baseUrl + req.path));
+        console.log('query', req.query);
+        switch (req.baseUrl + req.path) {
             case '/api/list/process': {
                 const list = await this.exec('ps aux | grep ffmpeg', res);
 
@@ -37,7 +41,7 @@ class Api {
                 const arecord = await this.exec('arecord -l');
 
                 if (ffmpeg !== undefined && arecord !== undefined) {
-                    res.send('ffmpeg:\n' + ffmpeg.concat('\n\n\narecord:\n' + arecord).replace(/(?:\r\n|\r|\n)/g, '<br>'))
+                    res.send('arecord:\n' + arecord.concat('\n\n\nffmpeg:\n' + ffmpeg).replace(/(?:\r\n|\r|\n)/g, '<br>'))
                 }
 
                 break;
@@ -54,7 +58,7 @@ class Api {
             }
 
             case '/api/start': {
-                const start = await this.exec(Api.COMMAND, res);
+                const start = await this.exec(Api.COMMAND.replaceAll('$HW', req.query?.device), res);
 
                 if (start !== undefined) {
                     res.send('ok');
@@ -96,7 +100,7 @@ class Api {
             res?.send(err.stderr.replace(/(?:\r\n|\r|\n)/g, '<br>'));
 
             if (res === undefined) {
-                return err;
+                return '';
             }
         }
 

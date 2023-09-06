@@ -2,10 +2,18 @@
 
 ## Raspberry pi setup
 
-Install deps
+- Install deps
+```
+sudo apt install ffmpeg nginx screen -y
+```
 
-    sudo apt install ffmpeg nginx
+- Install nodejs: https://github.com/nodesource/distributions#installation-instructions
 
+
+- Install the server
+```
+npm install
+```
 
 install node
 configure access point

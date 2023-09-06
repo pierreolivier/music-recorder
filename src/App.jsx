@@ -12,6 +12,8 @@ import './App.css';
 export default function App() {
     const [running, setRunning] = React.useState(undefined);
 
+    const [device, setDevice] = React.useState('hw:3,0');
+
     function updateRunning() {
         return fetch('/api/running')
             .then(res => res.text())
@@ -21,7 +23,7 @@ export default function App() {
     }
 
     function start() {
-        return fetch('/api/start')
+        return fetch('/api/start?device=' + device)
             .then(res => res.text())
             .then(text => {
                 console.log('start', text);

@@ -7,7 +7,7 @@ import express from "express";
 
 import App from "../src/App";
 
-import Api from "./api";
+import Api from "./Api";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
