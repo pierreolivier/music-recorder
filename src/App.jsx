@@ -1,9 +1,21 @@
 import * as React from "react";
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-import {Box, createTheme, CssBaseline, Tab, Tabs, TextField, ThemeProvider, Typography} from "@mui/material";
+import {
+    Box,
+    createTheme,
+    CssBaseline,
+    Dialog, DialogActions, DialogContent, DialogContentText,
+    DialogTitle, IconButton, List, ListItem, ListItemText,
+    Tab,
+    Tabs,
+    TextField,
+    ThemeProvider,
+    Typography
+} from "@mui/material";
 
 import './App.css';
+import {PlayArrow} from "@mui/icons-material";
 
 const darkTheme = createTheme({
     palette: {
@@ -46,20 +58,37 @@ function a11yProps(index) {
 }
 
 export default function App() {
-    const [value, setValue] = React.useState(0);
+    const [tabValue, setTabValue] = React.useState(0);
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        setTabValue(newValue);
     };
 
     const [running, setRunning] = React.useState(undefined);
-
     const [device, setDevice] = React.useState('hw:3,0');
+    const [recordings, setRecordings] = React.useState([]);
+
+    const [powerOffDialog, setPowerOffDialog] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setPowerOffDialog(true);
+    };
+
+    const handlePowerOffYes = () => {
+        setPowerOffDialog(false);
+
+        powerOff();
+    };
+
+    const handlePowerOffNo = () => {
+        setPowerOffDialog(false);
+    };
 
     function updateRunning() {
         return fetch('/api/running')
-            .then(res => res.text())
-            .then(text => {
-                setRunning(text.includes('true'));
+            .then(res => res.json())
+            .then(json => {
+                setRunning(json.running === true);
+                setRecordings(json.recordings);
             });
     }
 
@@ -83,6 +112,20 @@ export default function App() {
 
                 updateRunning();
             });
+    }
+
+    function powerOff() {
+        return fetch('/api/poweroff')
+            .then(res => res.text())
+            .then(text => {
+                console.log('poweroff', text);
+
+                updateRunning();
+            });
+    }
+
+    function openVLC(file) {
+        window.open('vlc-x-callback://x-callback-url/stream?url=http://music.local/recordings/' + file);
     }
 
     React.useEffect(() => {
@@ -114,31 +157,63 @@ export default function App() {
                 </div>
                 <div className={"divider"}></div>
 
+                <Dialog
+                    open={powerOffDialog}
+                    onClose={handlePowerOffNo}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description">
+                    <DialogTitle id="alert-dialog-title">
+                        Power off ?
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handlePowerOffNo}>No</Button>
+                        <Button onClick={handlePowerOffYes} autoFocus>
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange}
+                    <Tabs value={tabValue} onChange={handleChange}
                           aria-label="basic tabs example">
                         <Tab label="Action" {...a11yProps(0)} />
-                        <Tab label="Info" {...a11yProps(1)} />
-                        <Tab label="Configure" {...a11yProps(2)} />
+                        <Tab label="Records" {...a11yProps(1)} />
+                        <Tab label="Info" {...a11yProps(2)} />
+                        <Tab label="Configure" {...a11yProps(3)} />
                     </Tabs>
                 </Box>
-                <CustomTabPanel value={value} index={0}>
+                <CustomTabPanel value={tabValue} index={0}>
                     <div className={"action"}>
                         <Button variant="contained" disabled={running} onClick={() => start()}>Start record</Button>
                         <Button variant="outlined" onClick={() => stop()}>Stop record</Button>
                     </div>
                     <div className={"action"}>
-                        <Button variant="contained" color="error">Power off</Button>
+                        <Button variant="contained" color="error" onClick={handleClickOpen}>Power off</Button>
                     </div>
                 </CustomTabPanel>
-                <CustomTabPanel value={value} index={1}>
+                <CustomTabPanel value={tabValue} index={1}>
+                    <List>
+                        {recordings.map(file => {
+                            return (
+                                <ListItem key={file} secondaryAction={
+                                    <IconButton edge="end" aria-label="play" onClick={() => openVLC(file)}>
+                                        <PlayArrow />
+                                    </IconButton>
+                                }>
+                                    <ListItemText primary={decodeURI(file)} />
+                                </ListItem>
+                            )
+                        })}
+                    </List>
+                </CustomTabPanel>
+                <CustomTabPanel value={tabValue} index={2}>
                     <div className={"action"}>
                         <Button onClick={() => location.assign('http://' + location.hostname + '/recordings/')} variant="outlined">Recordings list</Button>
                         <Button onClick={() => location.assign('/api/list/process')} variant="outlined">Process list</Button>
                         <Button onClick={() => location.assign('/api/list/card')} variant="outlined">Card list</Button>
                     </div>
                 </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
+                <CustomTabPanel value={tabValue} index={3}>
                     <div className={"configure"}>
                         <TextField id="outlined-basic" fullWidth label="ALSA device" value={device} onChange={event => {
                             setDevice(event.target.value);
