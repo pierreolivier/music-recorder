@@ -69,19 +69,32 @@ export default function App() {
     const [recordings, setRecordings] = React.useState([]);
 
     const [powerOffDialog, setPowerOffDialog] = React.useState(false);
-
     const handleClickOpen = () => {
         setPowerOffDialog(true);
     };
-
     const handlePowerOffYes = () => {
         setPowerOffDialog(false);
 
         powerOff();
     };
-
     const handlePowerOffNo = () => {
         setPowerOffDialog(false);
+    };
+
+    const [stopRecordDialog, setStopRecordDialog] = React.useState(false);
+
+    const handleStopRecord = () => {
+        setStopRecordDialog(true);
+    };
+
+    const handleStopRecordYes = () => {
+        setStopRecordDialog(false);
+
+        stop();
+    };
+
+    const handleStopRecordNo = () => {
+        setStopRecordDialog(false);
     };
 
     const [deleteFilePath, setDeleteFilePath] = React.useState('');
@@ -206,6 +219,22 @@ export default function App() {
                 </Dialog>
 
                 <Dialog
+                    open={stopRecordDialog}
+                    onClose={handleStopRecordNo}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description">
+                    <DialogTitle id="alert-dialog-title">
+                        Stop record ?
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handleStopRecordNo}>No</Button>
+                        <Button onClick={handleStopRecordYes} autoFocus>
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
                     open={deleteFileDialog}
                     onClose={handleDeleteFileNo}
                     aria-labelledby="alert-dialog-title"
@@ -233,7 +262,7 @@ export default function App() {
                 <CustomTabPanel value={tabValue} index={0}>
                     <div className={"action"}>
                         <Button variant="contained" disabled={running} onClick={() => start()}>Start record</Button>
-                        <Button variant="outlined" onClick={() => stop()}>Stop record</Button>
+                        <Button variant="outlined" onClick={() => handleStopRecord()}>Stop record</Button>
                     </div>
                     <div className={"action"}>
                         <Button variant="contained" color="error" onClick={handleClickOpen}>Power off</Button>
