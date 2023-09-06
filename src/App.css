@@ -44,6 +44,10 @@ body {
     padding: 4px;
 }
 
+.recordings-button {
+    margin-left: 8px;
+}
+
 /* .MuiTab-root {
     color: #ffffff;
 }

@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 
 import './App.css';
-import {PlayArrow} from "@mui/icons-material";
+
+import {PlayArrow, Download} from "@mui/icons-material";
 
 const darkTheme = createTheme({
     palette: {
@@ -124,6 +125,10 @@ export default function App() {
             });
     }
 
+    function downloadFile(file) {
+        window.open('http://music.local/recordings/' + file);
+    }
+
     function openVLC(file) {
         window.open('vlc-x-callback://x-callback-url/stream?url=http://music.local/recordings/' + file);
     }
@@ -196,9 +201,14 @@ export default function App() {
                         {recordings.map(file => {
                             return (
                                 <ListItem key={file} secondaryAction={
-                                    <IconButton edge="end" aria-label="play" onClick={() => openVLC(file)}>
-                                        <PlayArrow />
-                                    </IconButton>
+                                    <div>
+                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => downloadFile(file)}>
+                                            <Download />
+                                        </IconButton>
+                                        <IconButton className={"recordings-button"} edge="end" aria-label="play" onClick={() => openVLC(file)}>
+                                            <PlayArrow />
+                                        </IconButton>
+                                    </div>
                                 }>
                                     <ListItemText primary={decodeURI(file)} />
                                 </ListItem>
